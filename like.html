@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will you be my Valentine?</title>
+    <style>
+        /* Modern Reset & Centering */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Better than height for mobile browsers */
+            margin: 0;
+            background-color: #fce4ec;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            z-index: 1;
+        }
+
+        .gif-container img {
+            width: 100%;
+            max-width: 250px; /* Constrain size on desktop */
+            height: auto;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            object-fit: contain;
+        }
+
+        .question {
+            font-size: clamp(1.5rem, 8vw, 2.5rem); /* Responsive typography */
+            color: #d32f2f;
+            margin-bottom: 30px;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            /* Important for when the Yes button grows */
+            flex-wrap: wrap; 
+            min-height: 150px; 
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s ease, font-size 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .yes-btn {
+            background-color: #4caf50;
+            color: white;
+            font-weight: bold;
+            order: 1; /* Keeps Yes on the left/top */
+        }
+
+        .no-btn {
+            background-color: #f44336;
+            color: white;
+            font-weight: bold;
+            order: 2;
+        }
+
+        /* Animations */
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .success-message {
+            font-size: clamp(2rem, 10vw, 4rem);
+            color: #4caf50;
+            font-weight: bold;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        footer {
+            position: fixed; /* Fixed works better than absolute for mobile keyboards */
+            bottom: 15px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #880e4f;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        /* Prevent the No button from disappearing or getting too weird */
+        .no-btn {
+            white-space: nowrap;
+            max-width: 90vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="gif-container">
+            <img id="mainGif" src="https://media.tenor.com/-aW73OVUtyYAAAAj/tkthao219-bubududu.gif" alt="Cute Bear">
+        </div>
+        <div class="question" id="question">Do you like me</div>
+        <div class="btn-group">
+            <button class="yes-btn" onclick="handleYes()">Yes</button>
+            <button class="no-btn" onclick="handleNo()">No</button>
+        </div>
+    </div>
+
+    <footer>
+        Designed by <strong>Krayolin Kisten</strong> ❤️
+    </footer>
+
+    <script>
+        const question = document.getElementById('question');
+        const mainGif = document.getElementById('mainGif');
+        const yesBtn = document.querySelector('.yes-btn');
+        const noBtn = document.querySelector('.no-btn');
+        const btnGroup = document.querySelector('.btn-group');
+
+        const phrases = [
+            "No", "Are you sure?", "Really sure?", "Think again!", 
+            "Last chance!", "Surely not?", "You might regret this!", 
+            "Give it another thought!", "Are you absolutely certain?", 
+            "This could be a mistake!", "Have a heart!", "Don't be so cold!", 
+            "Change of heart?", "Wouldn't you reconsider?", 
+            "Is that your final answer?", "You're breaking my heart ;(", 
+            "Plsss? :( You're breaking my heart"
+        ];
+
+        let noCount = 0;
+
+        function handleNo() {
+            noCount++;
+            // Change No button text
+            noBtn.innerText = phrases[Math.min(noCount, phrases.length - 1)];
+
+            // Increase Yes button size
+            // We use a multiplier that tapers off slightly so it doesn't break the screen immediately
+            const currentFontSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+            const newSize = currentFontSize * 1.4; 
+            
+            // Limit max size to prevent total screen takeover
+            if (newSize < 300) { 
+                yesBtn.style.fontSize = `${newSize}px`;
+                yesBtn.style.padding = `${parseFloat(window.getComputedStyle(yesBtn).padding) * 1.2}px`;
+            }
+        }
+
+        function handleYes() {
+            mainGif.src = "https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif";
+            question.innerText = "Ok yay!!!";
+            question.classList.add('success-message');
+            btnGroup.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
